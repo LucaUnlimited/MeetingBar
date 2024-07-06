@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Count</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="mt-4">
+        <div class="text-center m-4">
+            <a href="/orders" class="btn btn-custom">Back to Orders</a>
+        </div>
+
+        <h2 class="text-center">Stock Count</h2>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="nameColumn">Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="productEntity : ${productList}">
+                    <td th:text="${productEntity.name}"></td>
+                    <td th:text="${productEntity.price}"></td>
+                    <td>
+                        <form th:action="@{/product/edit}" method="post" class="form-stock">
+                            <input type="hidden" th:value="${productEntity.id}" name="id" />
+                            <input type="number" th:value="${productEntity.stock}"
+                                th:id="'stockCount-' + ${productEntity.id}" name="stock" min="0"
+                                class="form-control input-stock" />
+                            <div>
+                                <button type="button" class="btn btn-light btn-sm btn-action btn-edit"
+                                    th:onclick="'decrementStock(\'stockCount-' + ${productEntity.id} + '\')'">-
+                                </button>
+                                <button type="button" class="btn btn-light btn-sm btn-action btn-edit"
+                                    th:onclick="'incrementStock(\'stockCount-' + ${productEntity.id} + '\')'">+
+                                </button>
+                                <button type="submit" class="btn btn-light btn-sm btn-action btn-edit">Save</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center mb-4">
+            <button type="button" class="btn btn-custom" onclick="saveStartStock()">Save Initial Stock</button>
+            <button type="button" class="btn btn-custom" onclick="saveEndStock()">Save Final Stock</button>
+        </div>
+
+        <div class="text-center mb-4">
+            <form th:action="@{/stock-count/summary}" method="get" class="form-stock">
+                <div class="form-group">
+                    <label for="date">Select a date:</label>
+                    <input type="date" id="date" name="date" class="form-control select-custom"
+                        value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
+                </div>
+                <button type="submit" class="btn btn-custom">View Stock Summary</button>
+            </form>
+        </div>
+
+
+
+        <div>
+            <form th:action="@{/product/create}" th:object="${newProduct}" method="post">
+                <div class="form-group form-product">
+                    <input type="text" th:field="*{name}" id="name" class="form-control" placeholder="Product Name"
+                        name="name">
+                    <input type="number" th:field="*{price}" id="price" class="form-control" placeholder="Product Price"
+                        name="price">
+                    <input type="number" th:field="*{stock}" id="stock" class="form-control" placeholder="Product Stock"
+                        name="stock">
+                    <button type="submit" class="btn btn-custom">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function incrementStock(id) {
+            var input = document.getElementById(id);
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decrementStock(id) {
+            var input = document.getElementById(id);
+            if (parseInt(input.value) > 0) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        function saveStartStock() {
+            fetch('/stock-count/save-start', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    alert('Initial stock saved successfully.');
+                } else {
+                    alert('Error saving initial stock.');
+                }
+            });
+        }
+
+        function saveEndStock() {
+            fetch('/stock-count/save-end', {
+                method: 'POST'
+            }).then(response => {
+                if (response.ok) {
+                    alert('Final stock saved successfully.');
+                } else {
+                    alert('Error saving final stock.');
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>

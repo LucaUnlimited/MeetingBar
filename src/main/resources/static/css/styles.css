@@ -1,0 +1,60 @@
+body {
+  background-color: #282828;
+  color: white;
+}
+
+.form-container input {
+  flex: 1;
+  padding: 5px;
+  margin-left: 15px;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.form-product {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20%;
+}
+
+.form-product input {
+  margin-bottom: 20px;
+}
+
+.form-stock {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-stock {
+  width: 219px;
+  margin-bottom: 5px;
+}
+
+.btn-edit {
+  width: 70px;
+}
+
+td,
+th {
+  color: whitesmoke;
+  text-align: center;
+}
+
+input,
+select {
+  width: 200px;
+}
+
+.select-custom {
+  min-width: 200px;
+}
+
+.btn-custom {
+  background-color: #320064;
+  color: white;
+}
