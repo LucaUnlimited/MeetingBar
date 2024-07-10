@@ -60,14 +60,17 @@
         </table>
 
         <div class="mt-4 text-center">
-            <form th:action="@{/orders/room/{roomId}(roomId=${selectedHabId})}" method="get">
+            <form action="#" th:action="@{/orders/select-room}" th:method="post" class="form-stock">
                 <div class="form-group">
-                    <label for="habId">Search Orders by Room:</label>
-                    <select id="habId" name="habId" class="form-control" required>
-                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.number}"></option>
-                    </select>
+                <label for="roomSelect">Select a room:</label>
+                <select id="roomSelect" name="habId" class="form-control select-custom">
+                    <option th:each="roomId : ${#numbers.sequence(1, 22)}"
+                            th:value="${roomId}"
+                            th:text="'Room ' + ${roomId}">Room 1</option>
+                </select>
                 </div>
-                <button type="submit" class="btn btn-info">Search</button>
+                    <button type="submit" class="btn btn-custom">Submit</button>
+
             </form>
         </div>
 
@@ -76,6 +79,15 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+    document.getElementById('roomForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var select = document.getElementById('habId');
+        var roomId = select.options[select.selectedIndex].value;
+        var action = this.action.replace('__{roomId}__', roomId);
+        window.location.href = action;
+    });
+    </script>
 </body>
 
 </html>

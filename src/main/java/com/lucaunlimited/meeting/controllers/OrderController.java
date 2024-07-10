@@ -63,4 +63,8 @@ public class OrderController {
         return "orders-by-room";
     }
 
+    @PostMapping("/select-room")
+    public String selectRoom(@RequestParam Long habId) {
+        return "redirect:/orders/room/" + habId;
+    }
 }
